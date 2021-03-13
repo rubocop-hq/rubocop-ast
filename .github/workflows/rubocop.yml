@@ -32,8 +32,7 @@ jobs:
           - { os: windows, ruby: mingw }
           - { ruby: 2.5, os: ubuntu, coverage: true, title: 'Coverage' }
           - { ruby: '3.0', os: ubuntu, modern: true, title: 'Specs "modern"' }
-          # jruby disabled because of: https://github.com/jruby/jruby/issues/6416
-          # - { ruby: jruby, os: ubuntu }
+          - { ruby: jruby, os: ubuntu }
           - { ruby: jruby-head, os: ubuntu }
           - { ruby: truffleruby, os: ubuntu }
           - { ruby: truffleruby-head, os: ubuntu }
