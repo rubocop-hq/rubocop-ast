@@ -317,7 +317,7 @@ module RuboCop
         # returns nil if answer cannot be determined
         ancestors = each_ancestor(:class, :module, :sclass, :casgn, :block)
         result    = ancestors.map do |ancestor|
-          parent_module_name_part(ancestor) { |full_name| return full_name }
+          parent_module_name_part(ancestor) { |full_name| break full_name }
         end.compact.reverse.join('::')
         result.empty? ? 'Object' : result
       end

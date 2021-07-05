@@ -659,4 +659,65 @@ RSpec.describe RuboCop::AST::Node do
       end
     end
   end
+
+  describe '#parent_module_name' do
+    context 'when node on top level' do
+      let(:src) { 'def config; end' }
+
+      it 'returns "Object"' do
+        expect(node.parent_module_name).to eq 'Object'
+      end
+    end
+
+    context 'when node on module' do
+      let(:src) do
+        <<~RUBY
+          module Foo
+            attr_reader :config
+          end
+        RUBY
+      end
+
+      it 'returns parent module name with namespaces' do
+        method_defined_node = node.children.last
+        expect(method_defined_node.parent_module_name).to eq 'Foo'
+      end
+    end
+
+    context 'when node on singleton class' do
+      let(:src) do
+        <<~RUBY
+          module Foo
+            class << self
+              attr_reader :config
+            end
+          end
+        RUBY
+      end
+
+      it 'returns parent module name with namespaces' do
+        method_defined_node = node.children.last.children.last.children.last
+        expect(method_defined_node.parent_module_name).to eq 'Foo::#<Class:Foo>'
+      end
+    end
+
+    context 'when node on class in singleton class' do
+      let(:src) do
+        <<~RUBY
+          module Foo
+            class << self
+              class Bar
+                attr_reader :config
+              end
+            end
+          end
+        RUBY
+      end
+
+      it 'returns parent module name with namespaces' do
+        method_defined_node = node.children.last.children.last.children.last
+        expect(method_defined_node.parent_module_name).to eq 'Foo::#<Class:Foo>::Bar'
+      end
+    end
+  end
 end
