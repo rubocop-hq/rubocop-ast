@@ -16,7 +16,7 @@ pull_request_rules:
       - 'status-success=Specs | mingw'
       - 'status-success=Coverage | 2.5'
       - 'status-success=Specs "modern" | 3.0'
-      # - 'status-success=Specs | jruby'
+      - 'status-success=Specs | jruby'
       - 'status-success=Specs | jruby-head'
       - 'status-success=Specs | truffleruby'
       - 'status-success=Specs | truffleruby-head'
