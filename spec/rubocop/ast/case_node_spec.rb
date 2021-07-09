@@ -104,6 +104,19 @@ RSpec.describe RuboCop::AST::CaseNode do
 
         it { expect(case_node.else_branch).to be_sym_type }
       end
+
+      context 'with an empty else statement' do
+        let(:source) do
+          <<~RUBY
+            case
+            when :foo then :bar
+            else
+            end
+          RUBY
+        end
+
+        it { expect(case_node.else_branch).to be_nil }
+      end
     end
   end
 

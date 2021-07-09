@@ -125,6 +125,19 @@ RSpec.describe RuboCop::AST::CaseMatchNode do
 
           it { expect(case_match_node.else_branch).to be_sym_type }
         end
+
+        context 'with an empty else statement' do
+          let(:source) do
+            <<~RUBY
+              case expr
+              in pattern
+              else
+              end
+            RUBY
+          end
+
+          it { expect(case_match_node.else_branch).to be_empty_else_type }
+        end
       end
     end
   end
