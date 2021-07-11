@@ -127,5 +127,48 @@ RSpec.describe RuboCop::AST::CaseMatchNode do
         end
       end
     end
+
+    describe '#branches' do
+      context 'when there is an else' do
+        let(:source) { <<~RUBY }
+          case pattern
+          when :foo then # do nothing
+          when :bar then 42
+          else 'hello'
+          end
+        RUBY
+
+        it 'returns all the bodies' do
+          expect(case_match_node.branches).to match [nil, be_int_type, be_str_type]
+        end
+
+        context 'with an empty else' do
+          let(:source) { <<~RUBY }
+            case pattern
+            in :foo then # do nothing
+            in :bar then 42
+            else # do nothing
+            end
+          RUBY
+
+          it 'returns all the bodies' do
+            expect(case_match_node.branches).to match [nil, be_int_type, nil]
+          end
+        end
+      end
+
+      context 'when there is no else keyword' do
+        let(:source) { <<~RUBY }
+          case pattern
+          in :foo then # do nothing
+          in :bar then 42
+          end
+        RUBY
+
+        it 'returns only then when bodies' do
+          expect(case_match_node.branches).to match [nil, be_int_type]
+        end
+      end
+    end
   end
 end
