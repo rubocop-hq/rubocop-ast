@@ -31,6 +31,19 @@ module RuboCop
         node_parts[1...-1]
       end
 
+      # Returns an array of all the when branches in the `case` statement.
+      #
+      # @return [Array<Node, nil>] an array of the bodies of the `in` branches
+      # and the `else` (if any). Note that these bodies could be nil.
+      def branches
+        bodies = in_pattern_branches.map(&:body)
+        if else?
+          # `empty-else` node sets nil because it has no body.
+          else_branch&.empty_else_type? ? bodies.push(nil) : bodies.push(else_branch)
+        end
+        bodies
+      end
+
       # Returns the else branch of the `case` statement, if any.
       #
       # @return [Node] the else branch node of the `case` statement
